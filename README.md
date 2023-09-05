@@ -14,6 +14,8 @@ pnpm dev
 - Lucia Auth (default with GitHub OAuth)
 - TRPC + React Query
 - Tinybird analytics (optional)
+- TailwindCSS
+- Shadcn UI
 
 ## Commands
 
