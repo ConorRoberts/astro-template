@@ -4,6 +4,7 @@ import { auth, githubAuth } from "~/utils/auth/lucia";
 import { createId } from "@paralleldrive/cuid2";
 import type { APIRoute } from "astro";
 
+// https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app
 export const GET: APIRoute = async (context) => {
   const session = await context.locals.auth.validate();
   if (session) {
@@ -20,8 +21,7 @@ export const GET: APIRoute = async (context) => {
     });
   }
   try {
-    const { getExistingUser, githubUser, createUser } =
-      await githubAuth.validateCallback(code);
+    const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code);
 
     const getUser = async () => {
       const existingUser = await getExistingUser();

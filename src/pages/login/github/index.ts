@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { githubAuth } from "~/utils/auth/lucia";
 
+// https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app
 export const GET: APIRoute = async (context) => {
   const session = await context.locals.auth.validate();
   if (session) {
