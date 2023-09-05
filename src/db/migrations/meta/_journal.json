@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1693902030713,
+      "tag": "0000_clammy_albert_cleary",
+      "breakpoints": true
+    }
+  ]
+}
