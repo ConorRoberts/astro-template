@@ -17,6 +17,10 @@ pnpm dev
 - TailwindCSS
 - Shadcn UI
 
+## Deployment
+
+The recommended method is to deploy to Vercel. This application comes preconfigured with the Astro Vercel adapter.
+
 ## Commands
 
 All commands are run from the root of the project, from a terminal:
