@@ -19,6 +19,7 @@ interface ImportMetaEnv {
   readonly GITHUB_CLIENT_ID: string;
   readonly GITHUB_CLIENT_SECRET: string;
   readonly DATABASE_URL: string;
+  readonly VITE_PUBLIC_TINYBIRD_TOKEN?: string;
   readonly DEV: boolean;
 }
 
