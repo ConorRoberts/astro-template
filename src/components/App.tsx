@@ -148,7 +148,7 @@ const createTodoLayoutRoute = new Route({
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="shadcn" {...field} />
+                        <Input placeholder="Name" {...field} />
                       </FormControl>
                       <FormDescription>The name of the todo.</FormDescription>
                       <FormMessage />
