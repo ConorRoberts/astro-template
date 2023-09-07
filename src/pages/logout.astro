@@ -1,18 +1,15 @@
 ---
 import PageLayout from "~/layouts/PageLayout.astro";
-import { auth } from "~/utils/auth/lucia";
+import { auth } from "~/utils/auth";
 const session = await Astro.locals.auth.validate();
-  if (!session) {
-    return Astro.redirect("/",302)
-  }
-  // make sure to invalidate the current session!
-  await auth.invalidateSession(session.sessionId);
-  // delete session cookie
-  Astro.locals.auth.setSession(null);
-  return Astro.redirect("/login", 302);
+if (!session) {
+  return Astro.redirect("/", 302);
+}
+// make sure to invalidate the current session!
+await auth.invalidateSession(session.sessionId);
+// delete session cookie
+Astro.locals.auth.setSession(null);
+return Astro.redirect("/login", 302);
 ---
 
-
-<PageLayout title="Logout">
-  Logout
-</PageLayout>
+<PageLayout title="Logout">Logout</PageLayout>~/utils/lucia

@@ -1,8 +1,10 @@
-// schema.js
+import { createId } from "@paralleldrive/cuid2";
 import { blob, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const user = sqliteTable("user", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$default(() => createId()),
   name: text("name"),
 });
 

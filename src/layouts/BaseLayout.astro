@@ -1,10 +1,22 @@
 ---
+import "@fontsource/poppins/100.css";
+import "@fontsource/poppins/200.css";
+import "@fontsource/poppins/300.css";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/poppins/700.css";
+import "@fontsource/poppins/800.css";
+import "@fontsource/poppins/900.css";
 import "~/globals.css";
+import { APP_NAME } from "~/utils/constants/app";
 
 interface Props {
   title: string;
 }
 const { title } = Astro.props;
+
+const htmlTitle = `${title} - ${APP_NAME}`;
 
 export type BaseLayoutProps = Props;
 ---
@@ -15,17 +27,16 @@ export type BaseLayoutProps = Props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <title>{title} - Astro Application</title>
-    {import.meta.env.VITE_PUBLIC_TINYBIRD_TOKEN && 
-      <script
-        defer
-        src="https://unpkg.com/@tinybirdco/flock.js"
-        data-host="https://api.us-east.tinybird.co"
-        data-token={import.meta.env.VITE_PUBLIC_TINYBIRD_TOKEN}
-      />
+    <title>{htmlTitle}</title>
+    {
+      import.meta.env.VITE_PUBLIC_TINYBIRD_TOKEN && (
+        <script
+          defer
+          src="https://unpkg.com/@tinybirdco/flock.js"
+          data-host="https://api.us-east.tinybird.co"
+          data-token={import.meta.env.VITE_PUBLIC_TINYBIRD_TOKEN}
+        />
+      )
     }
   </head>
   <body>

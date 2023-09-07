@@ -1,5 +1,5 @@
 import { OAuthRequestError } from "@lucia-auth/oauth";
-import { auth, githubAuth } from "~/utils/auth/lucia";
+import { auth, githubAuth } from "~/utils/auth";
 
 import { createId } from "@paralleldrive/cuid2";
 import type { APIRoute } from "astro";

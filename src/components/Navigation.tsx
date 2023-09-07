@@ -1,7 +1,4 @@
-import {
-  ArrowLeftOnRectangleIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, UserIcon } from "@heroicons/react/24/outline";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -22,10 +19,7 @@ import {
 } from "./ui/dropdown-menu";
 
 export const Navigation = withTrpcProvider(() => {
-  const { data: authData, isFetching } = trpc.auth.getSession.useQuery(
-    undefined,
-    { retry: false }
-  );
+  const { data: authData, isFetching } = trpc.auth.getSession.useQuery(undefined, { retry: false });
 
   const isLoggedIn = authData !== undefined;
 
@@ -34,11 +28,13 @@ export const Navigation = withTrpcProvider(() => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuLink
-              className={navigationMenuTriggerStyle()}
-              href="/"
-            >
+            <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/">
               Home
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/app">
+              App
             </NavigationMenuLink>
           </NavigationMenuItem>
           {!isFetching && (
@@ -46,9 +42,7 @@ export const Navigation = withTrpcProvider(() => {
               {isLoggedIn && (
                 <NavigationMenuItem>
                   <DropdownMenu>
-                    <DropdownMenuTrigger
-                      className={navigationMenuTriggerStyle()}
-                    >
+                    <DropdownMenuTrigger className={navigationMenuTriggerStyle()}>
                       {authData.user.name}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -56,10 +50,7 @@ export const Navigation = withTrpcProvider(() => {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem asChild>
-                          <a
-                            href="/profile"
-                            className="flex gap-2 items-center"
-                          >
+                          <a href="/profile" className="flex gap-2 items-center">
                             <UserIcon className="w-4 h-4" />
                             <p>Profile</p>
                           </a>
@@ -78,10 +69,7 @@ export const Navigation = withTrpcProvider(() => {
               )}
               {!isLoggedIn && (
                 <NavigationMenuItem>
-                  <NavigationMenuLink
-                    className={navigationMenuTriggerStyle()}
-                    href="/login/github"
-                  >
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/login/github">
                     Login
                   </NavigationMenuLink>
                 </NavigationMenuItem>

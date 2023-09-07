@@ -12,7 +12,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["Poppins", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -17,3 +17,12 @@ CREATE TABLE `user` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text
 );
+--> statement-breakpoint
+CREATE TABLE `todo` (
+	`id` text PRIMARY KEY NOT NULL,
+	`name` text NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
+	`user_id` text NOT NULL,
+	`status` text NOT NULL
+);

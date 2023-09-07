@@ -1,6 +1,6 @@
 /// <reference types="lucia" />
 declare namespace Lucia {
-  type Auth = import("./utils/auth/lucia").Auth;
+  type Auth = import("./utils/auth").Auth;
   type DatabaseUserAttributes = {
     id: string;
     name: string | null;
@@ -19,6 +19,7 @@ interface ImportMetaEnv {
   readonly GITHUB_CLIENT_ID: string;
   readonly GITHUB_CLIENT_SECRET: string;
   readonly DATABASE_URL: string;
+  readonly DATABASE_AUTH_TOKEN?: string;
   readonly VITE_PUBLIC_TINYBIRD_TOKEN?: string;
   readonly DEV: boolean;
 }
