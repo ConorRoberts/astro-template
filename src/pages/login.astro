@@ -1,12 +1,21 @@
 ---
-import PageLayout from "~/layouts/PageLayout.astro"
+import { GithubIcon } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import PageLayout from "~/layouts/PageLayout.astro";
 ---
 
 <PageLayout title="Login">
   <div class="p-2 flex justify-center items-center flex-1">
     <div class="w-full max-w-sm bg-white border border-neutral-300 shadow-lg rounded-2xl sm:p-8 p-4">
-      <h1 class="text-center font-bold text-lg">Login</h1>
+      <h1 class="text-center font-bold text-3xl">Login</h1>
+      <div class="flex flex-col gap-2 items-stretch mt-8">
+        <a href="/login/github">
+          <Button className="gap-4 w-full">
+            <GithubIcon className="w-4 h-4" />
+            <p class="font-semibold">Login with GitHub</p>
+          </Button>
+        </a>
+      </div>
     </div>
   </div>
 </PageLayout>
-

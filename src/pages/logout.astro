@@ -7,8 +7,10 @@ if (!session) {
 }
 // make sure to invalidate the current session!
 await auth.invalidateSession(session.sessionId);
+
 // delete session cookie
 Astro.locals.auth.setSession(null);
+
 return Astro.redirect("/login", 302);
 ---
 

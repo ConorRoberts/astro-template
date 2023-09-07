@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "concurrently \"astro dev --open --port 3000\" \"tsr watch\"",
+    "dev": "astro dev --open --port 3000",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -48,8 +48,6 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@tanstack/router-cli": "0.0.1-beta.29",
-    "concurrently": "^8.2.1",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.13",
     "shadcn-ui": "^0.3.0",

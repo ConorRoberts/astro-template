@@ -1,7 +1,10 @@
-import { Link, Outlet, RootRoute, Route, Router, RouterProvider } from "@tanstack/react-router";
-import { proxyClient } from "~/utils/trpc/trpc-client";
+import { ArrowLeftOnRectangleIcon, HomeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { Link, Outlet, RootRoute, Route, Router, RouterProvider, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
+import { trpc } from "~/utils/trpc/trpc-client";
 import { TrpcProvider } from "./TrpcProvider";
-import { Dialog, DialogContent } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
 export const App = () => {
   return (
@@ -11,30 +14,65 @@ export const App = () => {
   );
 };
 
+const AppNavigation = () => {
+  return (
+    <div className="flex flex-col w-64 bg-gray-50 shadow-inner border border-r p-4">
+      <a href="/">
+        <Button className="gap-4 w-full justify-start" variant="ghost">
+          <HomeIcon className="w-4 h-4" />
+          <p>Home</p>
+        </Button>
+      </a>
+      <Link to="/">
+        <Button className="gap-4 w-full justify-start" variant="ghost">
+          <PencilIcon className="w-4 h-4" />
+          <p>Todos</p>
+        </Button>
+      </Link>
+      <a href="/logout" className="mt-auto">
+        <Button className="gap-4 w-full justify-start" variant="ghost">
+          <ArrowLeftOnRectangleIcon className="w-4 h-4" />
+          <p>Logout</p>
+        </Button>
+      </a>
+    </div>
+  );
+};
+
 // Create a root route
 const rootRoute = new RootRoute({
   component: () => {
     return (
-      <>
-        <div>
-          <Link to="/">Home</Link> <Link to="/about">About</Link>
+      <div className="flex flex-1 min-h-screen">
+        <AppNavigation />
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col">
+            <Outlet />
+          </div>
         </div>
-        <hr />
-        <Outlet />
-      </>
+      </div>
     );
   },
 });
 
 const indexRoute = new Route({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => createTodoLayoutRoute,
   path: "/",
-  loader: () => proxyClient.todo.getAll.query(),
-  component: ({ useLoader }) => {
-    const todos = useLoader();
+
+  component: () => {
+    const { data: todos = [] } = trpc.todo.getAll.useQuery();
     return (
-      <div>
-        <h3>List of todos</h3>
+      <div className="w-full max-w-xl p-2 mx-auto py-8">
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="font-bold text-3xl sm:text-5xl">Todos</h1>
+          <Link
+            search={{
+              create: true,
+            }}
+          >
+            <Button>Create</Button>
+          </Link>
+        </div>
         {todos.map((e) => (
           <div key={e.id}>{e.id}</div>
         ))}
@@ -49,36 +87,44 @@ const aboutRoute = new Route({
   component: () => <div>Hello from About!</div>,
 });
 
-const createTodoRoute = new Route({
-  getParentRoute: () => indexRoute,
-  path: "/",
-
-  validateSearch: () => {
-    return true;
+const createTodoLayoutRoute = new Route({
+  getParentRoute: () => rootRoute,
+  id: "create-todo",
+  validateSearch: (search) => {
+    return z
+      .object({ create: z.boolean().default(false) })
+      .catch({ create: false })
+      .parse(search);
   },
-  component: () => {
+  component: ({ useSearch }) => {
+    const navigate = useNavigate();
+    const open = useSearch({ select: (data) => data.create });
+
     return (
-      <Dialog
-        open={true}
-        onOpenChange={() => {
-          return;
-        }}
-      >
-        <DialogContent></DialogContent>
-      </Dialog>
+      <>
+        <Dialog
+          open={open}
+          onOpenChange={() => {
+            navigate({ search: { create: undefined } });
+          }}
+        >
+          <DialogContent>
+            <DialogTitle>Create Todo</DialogTitle>
+          </DialogContent>
+        </Dialog>
+        <Outlet />
+      </>
     );
   },
 });
 
-// Create the route tree using your routes
-const routeTree = rootRoute.addChildren([indexRoute, aboutRoute]);
+const routeTree = rootRoute.addChildren([createTodoLayoutRoute.addChildren([indexRoute]), aboutRoute]);
 
-// Create the router using your route tree
 const router = new Router({ routeTree });
 
 // Register your router for maximum type safety
-// declare module "@tanstack/react-router" {
-//   interface Register {
-//     router: typeof router;
-//   }
-// }
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}

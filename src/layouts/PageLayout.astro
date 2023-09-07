@@ -8,12 +8,10 @@ const props = Astro.props;
 ---
 
 <BaseLayout {...props}>
-  
   <div class="min-h-screen flex flex-col">
     <Navigation client:load />
-    <div class="flex-1">
+    <div class="flex-1 flex flex-col">
       <slot />
     </div>
   </div>
-
 </BaseLayout>

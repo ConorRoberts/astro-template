@@ -69,7 +69,7 @@ export const Navigation = withTrpcProvider(() => {
               )}
               {!isLoggedIn && (
                 <NavigationMenuItem>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/login/github">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/login">
                     Login
                   </NavigationMenuLink>
                 </NavigationMenuItem>
