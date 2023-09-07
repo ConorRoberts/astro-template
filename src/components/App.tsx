@@ -1,10 +1,16 @@
-import { ArrowLeftOnRectangleIcon, HomeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, ChartBarIcon, HomeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Outlet, RootRoute, Route, Router, RouterProvider, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { insertTodoSchema } from "~/db/schema";
 import { trpc } from "~/utils/trpc/trpc-client";
+import { LoadingSpinner } from "./LoadingSpinner";
 import { TrpcProvider } from "./TrpcProvider";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
 
 export const App = () => {
   return (
@@ -27,6 +33,12 @@ const AppNavigation = () => {
         <Button className="gap-4 w-full justify-start" variant="ghost">
           <PencilIcon className="w-4 h-4" />
           <p>Todos</p>
+        </Button>
+      </Link>
+      <Link to="/summary">
+        <Button className="gap-4 w-full justify-start" variant="ghost">
+          <ChartBarIcon className="w-4 h-4" />
+          <p>Some Other Page</p>
         </Button>
       </Link>
       <a href="/logout" className="mt-auto">
@@ -58,11 +70,11 @@ const rootRoute = new RootRoute({
 const indexRoute = new Route({
   getParentRoute: () => createTodoLayoutRoute,
   path: "/",
-
   component: () => {
     const { data: todos = [] } = trpc.todo.getAll.useQuery();
+
     return (
-      <div className="w-full max-w-xl p-2 mx-auto py-8">
+      <div className="w-full max-w-xl p-2 mx-auto py-8 flex flex-col gap-8">
         <div className="flex items-center justify-between gap-2">
           <h1 className="font-bold text-3xl sm:text-5xl">Todos</h1>
           <Link
@@ -73,18 +85,17 @@ const indexRoute = new Route({
             <Button>Create</Button>
           </Link>
         </div>
-        {todos.map((e) => (
-          <div key={e.id}>{e.id}</div>
-        ))}
+        <div className="flex flex-col gap-4">
+          {todos.map((e) => (
+            <div key={e.id} className="bg-white border border-neutral-200 shadow-lg p-4 rounded-xl space-y-px">
+              <p className="font-semibold text-lg">{e.name}</p>
+              <p className="text-xs text-neutral-500">Created: {e.createdAt.toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
       </div>
     );
   },
-});
-
-const aboutRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: "/about",
-  component: () => <div>Hello from About!</div>,
 });
 
 const createTodoLayoutRoute = new Route({
@@ -96,9 +107,27 @@ const createTodoLayoutRoute = new Route({
       .catch({ create: false })
       .parse(search);
   },
-  component: ({ useSearch }) => {
+  loader: () => {
+    const formSchema = insertTodoSchema.pick({ name: true });
+
+    return { formSchema };
+  },
+  component: ({ useLoader, useSearch }) => {
+    const formSchema = useLoader({ select: (data) => data.formSchema });
     const navigate = useNavigate();
     const open = useSearch({ select: (data) => data.create });
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        name: "",
+      },
+    });
+    const { mutateAsync: createTodo, isLoading: isCreateTodoLoading } = trpc.todo.create.useMutation();
+
+    const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+      await createTodo({ name: values.name });
+      await navigate({ search: { create: undefined } });
+    };
 
     return (
       <>
@@ -110,6 +139,30 @@ const createTodoLayoutRoute = new Route({
         >
           <DialogContent>
             <DialogTitle>Create Todo</DialogTitle>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="shadcn" {...field} />
+                      </FormControl>
+                      <FormDescription>The name of the todo.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex sm:justify-end">
+                  <Button type="submit">
+                    <p>Submit</p>
+                    {isCreateTodoLoading && <LoadingSpinner />}
+                  </Button>
+                </div>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
         <Outlet />
@@ -118,7 +171,19 @@ const createTodoLayoutRoute = new Route({
   },
 });
 
-const routeTree = rootRoute.addChildren([createTodoLayoutRoute.addChildren([indexRoute]), aboutRoute]);
+const todoSummaryRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/summary",
+  component: () => {
+    return (
+      <div>
+        <h1>This is another page</h1>
+      </div>
+    );
+  },
+});
+
+const routeTree = rootRoute.addChildren([createTodoLayoutRoute.addChildren([indexRoute]), todoSummaryRoute]);
 
 const router = new Router({ routeTree });
 
