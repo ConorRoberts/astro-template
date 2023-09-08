@@ -1,1 +1,1 @@
-export const APP_NAME = "Astro Application";
+export const APP_NAME = "Todo App";

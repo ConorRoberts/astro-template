@@ -1,6 +1,7 @@
-import { ArrowLeftOnRectangleIcon, ChartBarIcon, HomeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, Bars3Icon, ChartBarIcon, HomeIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Outlet, RootRoute, Route, Router, RouterProvider, useNavigate } from "@tanstack/react-router";
+import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { insertTodoSchema } from "~/db/schema";
@@ -11,6 +12,7 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
 export const App = () => {
   return (
@@ -20,34 +22,64 @@ export const App = () => {
   );
 };
 
-const AppNavigation = () => {
+const SidebarNavigationContent: FC<{ onLinkClick?: () => void }> = (props) => {
   return (
-    <div className="flex flex-col w-64 bg-gray-50 shadow-inner border border-r p-4">
+    <div className="flex h-full flex-col">
       <a href="/">
-        <Button className="gap-4 w-full justify-start" variant="ghost">
-          <HomeIcon className="w-4 h-4" />
+        <Button className="w-full justify-start gap-4" variant="ghost">
+          <HomeIcon className="h-4 w-4" />
           <p>Home</p>
         </Button>
       </a>
-      <Link to="/">
-        <Button className="gap-4 w-full justify-start" variant="ghost">
-          <PencilIcon className="w-4 h-4" />
+      <Link to="/" onClick={props.onLinkClick}>
+        <Button className="w-full justify-start gap-4" variant="ghost">
+          <PencilIcon className="h-4 w-4" />
           <p>Todos</p>
         </Button>
       </Link>
-      <Link to="/summary">
-        <Button className="gap-4 w-full justify-start" variant="ghost">
-          <ChartBarIcon className="w-4 h-4" />
+      <Link to="/summary" onClick={props.onLinkClick}>
+        <Button className="w-full justify-start gap-4" variant="ghost">
+          <ChartBarIcon className="h-4 w-4" />
           <p>Some Other Page</p>
         </Button>
       </Link>
       <a href="/logout" className="mt-auto">
-        <Button className="gap-4 w-full justify-start" variant="ghost">
-          <ArrowLeftOnRectangleIcon className="w-4 h-4" />
+        <Button className="w-full justify-start gap-4" variant="ghost">
+          <ArrowLeftOnRectangleIcon className="h-4 w-4" />
           <p>Logout</p>
         </Button>
       </a>
     </div>
+  );
+};
+const AppNavigation = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <div className="flex justify-end p-1 md:hidden">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost">
+              <Bars3Icon className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="flex flex-col">
+            <SheetHeader>
+              <SheetTitle>Title Something</SheetTitle>
+              <SheetDescription>Something</SheetDescription>
+            </SheetHeader>
+            <div className="mt-8 flex flex-1 flex-col">
+              <SidebarNavigationContent onLinkClick={() => setOpen(false)} />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="hidden w-64 border border-r bg-gray-50 p-4 shadow-inner md:block">
+        <SidebarNavigationContent />
+      </div>
+    </>
   );
 };
 
@@ -55,10 +87,10 @@ const AppNavigation = () => {
 const rootRoute = new RootRoute({
   component: () => {
     return (
-      <div className="flex flex-1 min-h-screen">
+      <div className="flex min-h-screen flex-1 flex-col md:flex-row">
         <AppNavigation />
-        <div className="flex-1 relative">
-          <div className="absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col">
+        <div className="relative flex-1">
+          <div className="absolute inset-0 flex flex-col overflow-y-auto overflow-x-hidden">
             <Outlet />
           </div>
         </div>
@@ -74,9 +106,9 @@ const indexRoute = new Route({
     const { data: todos = [] } = trpc.todo.getAll.useQuery();
 
     return (
-      <div className="w-full max-w-xl p-2 mx-auto py-8 flex flex-col gap-8">
+      <div className="mx-auto flex w-full max-w-xl flex-col gap-8 p-2 py-8">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="font-bold text-3xl sm:text-5xl">Todos</h1>
+          <h1 className="text-3xl font-bold sm:text-5xl">Todos</h1>
           <Link
             search={{
               create: true,
@@ -87,8 +119,8 @@ const indexRoute = new Route({
         </div>
         <div className="flex flex-col gap-4">
           {todos.map((e) => (
-            <div key={e.id} className="bg-white border border-neutral-200 shadow-lg p-4 rounded-xl space-y-px">
-              <p className="font-semibold text-lg">{e.name}</p>
+            <div key={e.id} className="space-y-px rounded-xl border border-neutral-200 bg-white p-4 shadow-lg">
+              <p className="text-lg font-semibold">{e.name}</p>
               <p className="text-xs text-neutral-500">Created: {e.createdAt.toLocaleString()}</p>
             </div>
           ))}

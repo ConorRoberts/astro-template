@@ -50,16 +50,16 @@ export const Navigation = withTrpcProvider(() => {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem asChild>
-                          <a href="/profile" className="flex gap-2 items-center">
-                            <UserIcon className="w-4 h-4" />
+                          <a href="/profile" className="flex items-center gap-2">
+                            <UserIcon className="h-4 w-4" />
                             <p>Profile</p>
                           </a>
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <a href="/logout" className="flex gap-2 items-center">
-                          <ArrowLeftOnRectangleIcon className="w-4 h-4" />
+                        <a href="/logout" className="flex items-center gap-2">
+                          <ArrowLeftOnRectangleIcon className="h-4 w-4" />
                           <p>Logout</p>
                         </a>
                       </DropdownMenuItem>
