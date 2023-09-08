@@ -223,9 +223,18 @@ const todoIdRoute = new Route({
   path: "todo/$todoId",
   component: ({ useParams }) => {
     const params = useParams();
+    const { data: todo } = trpc.todo.get.useQuery({ todoId: params.todoId });
+
     return (
-      <div>
-        <p>{params.todoId}</p>
+      <div className="flex flex-1 items-center justify-center">
+        <div className="rounded-xl border border-gray-300 bg-white p-8 shadow-lg">
+          {todo && (
+            <>
+              <p className="text-2xl font-bold">{todo.name}</p>
+            </>
+          )}
+          {!todo && <LoadingSpinner size={36} />}
+        </div>
       </div>
     );
   },
