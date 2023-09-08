@@ -1,4 +1,4 @@
-import { ArrowLeftOnRectangleIcon, UserIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, RocketLaunchIcon, UserIcon } from "@heroicons/react/24/outline";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -24,51 +24,60 @@ export const Navigation = withTrpcProvider(() => {
   const isLoggedIn = authData !== undefined;
 
   return (
-    <div className="flex">
-      <NavigationMenu>
+    <div>
+      <NavigationMenu className="max-w-full justify-between">
         <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/">
+              <RocketLaunchIcon className="h-5 w-5" />
+            </NavigationMenuLink>
+          </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/">
               Home
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/app">
-              App
-            </NavigationMenuLink>
-          </NavigationMenuItem>
+        </NavigationMenuList>
+        <NavigationMenuList className="ml-auto">
           {!isFetching && (
             <>
               {isLoggedIn && (
-                <NavigationMenuItem>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className={navigationMenuTriggerStyle()}>
-                      {authData.user.name}
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Account</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuGroup>
+                <>
+                  <NavigationMenuItem className="ml-auto">
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/app">
+                      App
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className={navigationMenuTriggerStyle()}>
+                        {authData.user.name}
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem asChild>
+                            <a href="/profile" className="flex items-center gap-2">
+                              <UserIcon className="h-4 w-4" />
+                              <p>Profile</p>
+                            </a>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                          <a href="/profile" className="flex items-center gap-2">
-                            <UserIcon className="h-4 w-4" />
-                            <p>Profile</p>
+                          <a href="/logout" className="flex items-center gap-2">
+                            <ArrowLeftOnRectangleIcon className="h-4 w-4" />
+                            <p>Logout</p>
                           </a>
                         </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <a href="/logout" className="flex items-center gap-2">
-                          <ArrowLeftOnRectangleIcon className="h-4 w-4" />
-                          <p>Logout</p>
-                        </a>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </NavigationMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </NavigationMenuItem>
+                </>
               )}
               {!isLoggedIn && (
-                <NavigationMenuItem>
+                <NavigationMenuItem className="ml-auto">
                   <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/login">
                     Login
                   </NavigationMenuLink>

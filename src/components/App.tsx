@@ -5,7 +5,6 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { insertTodoSchema } from "~/db/schema";
-import { APP_NAME } from "~/utils/constants/app";
 import { trpc } from "~/utils/trpc/trpc-client";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { TrpcProvider } from "./TrpcProvider";
@@ -58,15 +57,14 @@ const AppNavigation = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between p-1 md:hidden">
-        <h3 className="text-xl font-semibold">{APP_NAME}</h3>
+      <div className="fixed bottom-0 left-0 right-0 z-20 flex h-20 items-start justify-evenly border-t border-neutral-200 bg-white/80 p-4 backdrop-blur-sm md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost">
               <Bars3Icon className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent className="flex flex-col">
+          <SheetContent className="flex flex-col" side={"bottom"}>
             <SheetFooter className="mt-8 flex flex-1 flex-col">
               <SidebarNavigationContent onLinkClick={() => setOpen(false)} />
             </SheetFooter>
