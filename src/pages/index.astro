@@ -1,8 +1,6 @@
 ---
 import PrimaryCTA from "~/components/PrimaryCTA.astro";
 import PageLayout from "~/layouts/PageLayout.astro";
-import { sendEvent } from "~/utils/analytics/send-event";
-await sendEvent({ data: {}, timestamp: new Date(), type: "user_login" });
 ---
 
 <PageLayout title="Home">
