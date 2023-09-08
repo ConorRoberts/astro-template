@@ -5,6 +5,7 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { insertTodoSchema } from "~/db/schema";
+import { APP_NAME } from "~/utils/constants/app";
 import { trpc } from "~/utils/trpc/trpc-client";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { TrpcProvider } from "./TrpcProvider";
@@ -12,7 +13,7 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetContent, SheetFooter, SheetTrigger } from "./ui/sheet";
 
 export const App = () => {
   return (
@@ -57,7 +58,8 @@ const AppNavigation = () => {
 
   return (
     <>
-      <div className="flex justify-end p-1 md:hidden">
+      <div className="flex items-center justify-between p-1 md:hidden">
+        <h3 className="text-xl font-semibold">{APP_NAME}</h3>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost">
@@ -65,13 +67,9 @@ const AppNavigation = () => {
             </Button>
           </SheetTrigger>
           <SheetContent className="flex flex-col">
-            <SheetHeader>
-              <SheetTitle>Title Something</SheetTitle>
-              <SheetDescription>Something</SheetDescription>
-            </SheetHeader>
-            <div className="mt-8 flex flex-1 flex-col">
+            <SheetFooter className="mt-8 flex flex-1 flex-col">
               <SidebarNavigationContent onLinkClick={() => setOpen(false)} />
-            </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </div>
@@ -119,10 +117,15 @@ const indexRoute = new Route({
         </div>
         <div className="flex flex-col gap-4">
           {todos.map((e) => (
-            <div key={e.id} className="space-y-px rounded-xl border border-neutral-200 bg-white p-4 shadow-lg">
+            <Link
+              key={e.id}
+              className="hover:neutral-100 space-y-px rounded-xl border border-neutral-200 bg-white p-4 shadow-lg transition"
+              to={todoIdRoute.to}
+              params={{ todoId: e.id }}
+            >
               <p className="text-lg font-semibold">{e.name}</p>
               <p className="text-xs text-neutral-500">Created: {e.createdAt.toLocaleString()}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -136,7 +139,7 @@ const createTodoLayoutRoute = new Route({
   validateSearch: (search) => {
     return z
       .object({ create: z.boolean().default(false) })
-      .catch({ create: false })
+      .default({})
       .parse(search);
   },
   loader: () => {
@@ -215,7 +218,23 @@ const todoSummaryRoute = new Route({
   },
 });
 
-const routeTree = rootRoute.addChildren([createTodoLayoutRoute.addChildren([indexRoute]), todoSummaryRoute]);
+const todoIdRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "todo/$todoId",
+  component: ({ useParams }) => {
+    const params = useParams();
+    return (
+      <div>
+        <p>{params.todoId}</p>
+      </div>
+    );
+  },
+});
+
+const routeTree = rootRoute.addChildren([
+  createTodoLayoutRoute.addChildren([indexRoute.addChildren([todoIdRoute])]),
+  todoSummaryRoute,
+]);
 
 const router = new Router({ routeTree });
 
