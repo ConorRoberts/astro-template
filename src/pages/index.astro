@@ -1,9 +1,16 @@
 ---
 import PrimaryCTA from "~/components/PrimaryCTA.astro";
 import PageLayout from "~/layouts/PageLayout.astro";
+import { APP_NAME } from "~/utils/constants/app";
 ---
 
-<PageLayout title="Home">
-  <h1>Home Page</h1>
-    <PrimaryCTA/>
+<PageLayout seo={{ title: "Home" }}>
+  <div class="my-48 relative">
+    <div class="absolute bg-blue-300 rounded-full blur-[75px] inset-x-0 -inset-y-16 z-0"/>
+    <div class="flex flex-col gap-3 mx-2 relative z-10">
+      <h1 class="font-bold text-5xl text-center">{APP_NAME}</h1>
+      <p class="text-center font-medium text-neutral-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, nam.</p>
+    </div>
+  </div>
+  <PrimaryCTA />
 </PageLayout>

@@ -8,15 +8,18 @@ import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/800.css";
 import "@fontsource/poppins/900.css";
+import { SEO } from "astro-seo";
 import "~/globals.css";
-import { APP_NAME } from "~/utils/constants/app";
+import { APP_DESCRIPTION, APP_NAME } from "~/utils/constants/app";
+
 
 interface Props {
-  title: string;
+  seo:Parameters<typeof SEO>[0] & {title:string}
 }
-const { title } = Astro.props;
 
-const htmlTitle = `${title} - ${APP_NAME}`;
+const { seo } = Astro.props;
+
+seo.title =  `${seo.title} - ${APP_NAME}`;
 
 export type BaseLayoutProps = Props;
 ---
@@ -27,7 +30,7 @@ export type BaseLayoutProps = Props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{htmlTitle}</title>
+    <SEO description={APP_DESCRIPTION} {...seo} />
     {
       import.meta.env.VITE_PUBLIC_TINYBIRD_TOKEN && (
         <script

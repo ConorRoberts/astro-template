@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-import { insertTodoSchema, todo } from "~/db/schema";
+import { insertTodoSchema, selectTodoSchema, todo } from "~/db/schema";
 import { protectedProcedure, router } from "../trpc-server-config";
 
 export const todoRouter = router({
@@ -19,5 +19,8 @@ export const todoRouter = router({
       name: input.name,
       userId: ctx.session.user.id,
     });
+  }),
+  delete: protectedProcedure.input(selectTodoSchema.pick({ id: true })).mutation(async ({ ctx, input }) => {
+    return await ctx.db.delete(todo).where(and(eq(todo.id, input.id), eq(todo.userId, ctx.session.user.id)));
   }),
 });

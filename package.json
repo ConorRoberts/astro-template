@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^3.0.0",
+    "@astrojs/sitemap": "^3.0.0",
     "@astrojs/tailwind": "^5.0.0",
     "@astrojs/vercel": "^4.0.3",
     "@fontsource/poppins": "^5.0.8",
@@ -35,6 +36,7 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "astro": "^3.0.8",
+    "astro-seo": "^0.8.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "drizzle-orm": "^0.28.5",
@@ -60,8 +62,10 @@
     "eslint": "^8.48.0",
     "eslint-plugin-astro": "^0.29.0",
     "prettier": "^3.0.3",
+    "prettier-plugin-astro": "^0.12.0",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "shadcn-ui": "^0.3.0",
-    "tsx": "^3.12.8"
+    "tsx": "^3.12.8",
+    "vite-plugin-pwa": "^0.16.5"
   }
 }

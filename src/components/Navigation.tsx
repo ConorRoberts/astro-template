@@ -24,8 +24,8 @@ export const Navigation = withTrpcProvider(() => {
   const isLoggedIn = authData !== undefined;
 
   return (
-    <div>
-      <NavigationMenu className="max-w-full justify-between">
+    <>
+      <NavigationMenu className="max-w-full justify-between sticky top-0 bg-white z-20 isolate">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/">
@@ -87,6 +87,6 @@ export const Navigation = withTrpcProvider(() => {
           )}
         </NavigationMenuList>
       </NavigationMenu>
-    </div>
+    </>
   );
 });
